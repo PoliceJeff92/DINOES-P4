@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGEF - Departamento de Logística DINOES</title>
+    <title>Departamento de Logística DINOES</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -213,7 +213,7 @@
 
                 <div>
                     <h3 class="text-sm font-bold text-green-800 mb-2 uppercase border-l-4 border-green-600 pl-2">Material CS / Agentes Químicos</h3>
-                    <div class="bg-white rounded-xl shadow-sm border overflow-hidden"><div class="table-container"><table class="w-full text-left text-xs"><thead class="bg-gray-50 border-b"><tr class="uppercase text-gray-500"><th class="px-4 py-3">Tipo</th><th class="px-4 py-3">Unidad</th><th class="px-4 py-3">Cant.</th><th class="px-4 py-3">Estado</th></tr></thead><tbody id="tabla-cs-body" class="divide-y"></tbody></table></div></div>
+                    <div class="bg-white rounded-xl shadow-sm border overflow-hidden"><div class="table-container"><table class="w-full text-left text-xs"><thead class="bg-gray-50 border-b"><tr class="uppercase text-gray-500"><th class="px-4 py-3">Tipo</th><th class="px-4 py-3">Unidad</th><th class="px-4 py-3">Cant.</th><th class="px-4 py-3">Estado</th><th class="px-4 py-3">Vencimiento</th></tr></thead><tbody id="tabla-cs-body" class="divide-y"></tbody></table></div></div>
                 </div>
             </div>
 
@@ -254,7 +254,6 @@
             icon.classList.add('animate-spin');
             try {
                 const response = await fetch(API_URL, { method: 'GET', mode: 'cors', redirect: 'follow' });
-                if (!response.ok) throw new Error('Error en la red');
                 const data = await response.json();
                 if(data.status === "success") {
                     rawData = data;
@@ -338,7 +337,7 @@
 
             document.getElementById('tabla-armas-body').innerHTML = armas.map(a => `<tr><td class="px-4 py-3">${a.Tipo}</td><td class="px-4 py-3">${a.Unidad}</td><td class="px-4 py-3 font-bold">${a.Cantidad}</td><td class="px-4 py-3">${a.Estado}</td></tr>`).join('');
             document.getElementById('tabla-municion-body').innerHTML = muni.map(a => `<tr><td class="px-4 py-3">${a.Tipo}</td><td class="px-4 py-3">${a.Unidad}</td><td class="px-4 py-3 font-bold">${a.Cantidad}</td><td class="px-4 py-3">${a.Vencimiento || '-'}</td></tr>`).join('');
-            document.getElementById('tabla-cs-body').innerHTML = cs.map(a => `<tr><td class="px-4 py-3">${a.Tipo}</td><td class="px-4 py-3">${a.Unidad}</td><td class="px-4 py-3 font-bold">${a.Cantidad}</td><td class="px-4 py-3">${a.Estado}</td></tr>`).join('');
+            document.getElementById('tabla-cs-body').innerHTML = cs.map(a => `<tr><td class="px-4 py-3">${a.Tipo}</td><td class="px-4 py-3">${a.Unidad}</td><td class="px-4 py-3 font-bold">${a.Cantidad}</td><td class="px-4 py-3">${a.Estado}</td><td class="px-4 py-3 font-bold">${a.Vencimiento || '-'}</td></tr>`).join('');
         }
 
         function renderEquinos(lista) {
@@ -357,27 +356,21 @@
         }
 
         function renderAllCharts(v, a, e, c, k) {
-            // 1. Chart Vehículos (Pastel)
             createPieChart('chartPieDetail', ['Op', 'Taller', 'Siniestro', 'Log', 'Presp', 'Ret'], 
                 [v.filter(x => x.Estado === 'OPERATIVO').length, v.filter(x => x.Estado === 'MANTENIMIENTO').length, v.filter(x => x.Estado === 'SINIESTRADO').length, v.filter(x => x.Estado === 'LOGISTICA').length, v.filter(x => x.Estado === 'PRESUPUESTO').length, v.filter(x => x.Estado === 'RETENIDO').length], 
                 ['#10b981', '#8b5cf6', '#ef4444', '#f59e0b', '#f97316', '#0f172a']);
 
-            // 2. Chart Armamento (Pastel - Por Estado)
             const aBu = a.filter(x => String(x.Estado).toUpperCase().includes('BUENO')).length;
             createPieChart('chartArmamentoPie', ['Bueno', 'Otros'], [aBu, a.length - aBu], ['#3b82f6', '#cbd5e1']);
 
-            // 3. Chart Semovientes (Pastel - Can vs Equi)
             createPieChart('chartSemovientesPie', ['Equinos', 'Canes'], [e.length, c.length], ['#b45309', '#059669']);
 
-            // 4. Chart Contratos (Pastel - Activos vs Vencidos)
             const kVen = k.filter(x => x.Fin && new Date(x.Fin) < today).length;
             createPieChart('chartContratosPie', ['Activos', 'Vencidos'], [k.length - kVen, kVen], ['#10b981', '#ef4444']);
 
-            // 5. Chart Zonas (Dona)
             const zones = {}; v.forEach(x => zones[x.Zona] = (zones[x.Zona] || 0) + 1);
             createPieChart('chartPieZones', Object.keys(zones), Object.values(zones), ['#3b82f6', '#06b6d4', '#8b5cf6', '#ec4899', '#f97316'], 'doughnut');
 
-            // 6. Chart Unidades (Barras)
             const units = {}; v.forEach(x => units[x.Unidad] = (units[x.Unidad] || 0) + 1);
             if(charts.bar) charts.bar.destroy();
             charts.bar = new Chart(document.getElementById('chartZones'), { type: 'bar', data: { labels: Object.keys(units), datasets: [{ label: 'Vehículos', data: Object.values(units), backgroundColor: '#3b82f6' }] }, options: { maintainAspectRatio: false, scales: { y: { beginAtZero: true } } } });
