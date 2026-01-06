@@ -235,15 +235,24 @@
             const icon = document.getElementById('sync-icon');
             icon.classList.add('animate-spin');
             try {
-                const response = await fetch(`${API_URL}?t=${Date.now()}`);
+                // MODIFICACIÓN PARA EVITAR ERROR DE CORS
+                const response = await fetch(API_URL, {
+                    method: 'GET',
+                    mode: 'cors',
+                    redirect: 'follow'
+                });
+                
+                if (!response.ok) throw new Error('Error en la red');
+                
                 const data = await response.json();
                 if(data.status === "success") {
                     rawData = data;
                     applyGlobalFilter();
+                    console.log("Sincronización exitosa");
                 }
             } catch (e) {
                 console.error("Error de sincronización:", e);
-                alert("Error al conectar con el servidor.");
+                alert("Error al conectar con el servidor de Google Sheets. Asegúrate de haber publicado el script como 'Cualquiera'.");
             } finally {
                 icon.classList.remove('animate-spin');
             }
