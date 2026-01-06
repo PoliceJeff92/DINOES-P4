@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGEF - Departamento de Logística DINOES</title>
+    <title>SGEF - Logística DINOES</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -17,10 +17,7 @@
                         accent: '#ef4444',
                         dark: '#0f172a',
                         success: '#10b981',
-                        warning: '#f59e0b',
-                        info: '#06b6d4',
-                        maintenance: '#8b5cf6',
-                        budget: '#f97316'
+                        warning: '#f59e0b'
                     }
                 }
             }
@@ -28,151 +25,110 @@
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
         .sidebar-link.active { background-color: #3b82f6; color: white; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .table-container { overflow-x: auto; }
-        canvas { max-height: 280px; }
-        .status-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 9999px; text-transform: uppercase; }
+        canvas { max-height: 200px !important; }
+        .card-dash { background: white; border-radius: 12px; padding: 1.25rem; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col text-gray-800">
 
     <nav class="bg-dark text-white shadow-xl sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <div class="bg-blue-600 p-2 rounded-lg"><i class="fas fa-shield-alt text-xl"></i></div>
-                <div>
-                    <h1 class="text-sm md:text-lg font-bold leading-tight uppercase">DIRECCIÓN NACIONAL DE OPERACIONES ESPECIALES</h1>
-                    <p class="text-[10px] uppercase tracking-widest opacity-70">Departamento de Logística DINOES JJMAV1.0</p>
-                </div>
+                <i class="fas fa-shield-alt text-2xl text-blue-500"></i>
+                <h1 class="text-sm md:text-lg font-bold uppercase tracking-tight">Logística DINOES</h1>
             </div>
-            
-            <div class="flex items-center space-x-3 bg-gray-800 rounded-lg px-4 py-1.5 border border-gray-700">
-                <i class="fas fa-filter text-blue-400 text-xs"></i>
-                <select id="global-unit-filter" onchange="applyGlobalFilter()" class="bg-transparent text-white text-xs font-bold focus:outline-none">
-                    <option value="ALL" class="text-dark">TODAS LAS UNIDADES</option>
-                    <option value="DINOES" class="text-dark font-bold">DINOES</option>
-                    <option value="UNOE" class="text-dark font-bold">UNOE</option>
-                    <option value="AEROPOLICIAL" class="text-dark font-bold">AEROPOLICIAL</option>
-                    <option value="UNIR" class="text-dark">UNIR</option>
-                    <option value="UNEMA" class="text-dark">UNEMA</option>
-                    <option value="UER" class="text-dark">UER</option>
-                    <option value="UNMO" class="text-dark">UNMO</option>
-                    <option value="CRAC" class="text-dark">CRAC</option>
+            <div class="bg-gray-800 rounded px-3 py-1">
+                <select id="global-unit-filter" onchange="applyGlobalFilter()" class="bg-transparent text-white text-xs font-bold outline-none">
+                    <option value="ALL">UNIDAD NACIONAL</option>
+                    <option value="DINOES" class="text-dark">DINOES</option>
+                    <option value="UNOE" class="text-dark">UNOE</option>
+                    <option value="AEROPOLICIAL" class="text-dark">AEROPOLICIAL</option>
                 </select>
             </div>
         </div>
     </nav>
 
     <div class="flex flex-1 flex-col md:flex-row">
-        <aside class="w-full md:w-64 bg-white border-r border-gray-200 p-4 space-y-1">
-            <p class="text-xs font-semibold text-gray-400 uppercase px-3 mb-2">Principal</p>
-            <button onclick="switchTab('dashboard')" class="sidebar-link active w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-blue-50 transition-all">
-                <i class="fas fa-chart-pie w-5"></i><span>Dashboard</span>
+        <aside class="w-full md:w-60 bg-white border-r border-gray-200 p-4 space-y-1">
+            <button onclick="switchTab('dashboard')" class="sidebar-link active w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600">
+                <i class="fas fa-th-large w-5"></i><span>Dashboard</span>
             </button>
-            <p class="text-xs font-semibold text-gray-400 uppercase px-3 mt-4 mb-2">Recursos</p>
-            <button onclick="switchTab('vehiculos')" class="sidebar-link w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-blue-50 transition-all">
+            <div class="text-[10px] font-bold text-gray-400 uppercase mt-4 mb-2 px-3">Inventarios</div>
+            <button onclick="switchTab('vehiculos')" class="sidebar-link w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600">
                 <i class="fas fa-car w-5"></i><span>Vehículos</span>
             </button>
-            <button onclick="switchTab('armamento')" class="sidebar-link w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-blue-50 transition-all">
-                <i class="fas fa-gun w-5"></i><span>Armamento y CS</span>
+            <button onclick="switchTab('armamento')" class="sidebar-link w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600">
+                <i class="fas fa-gun w-5"></i><span>Armamento / CS</span>
             </button>
-            <button onclick="switchTab('equinos')" class="sidebar-link w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-blue-50 transition-all">
+            <button onclick="switchTab('equinos')" class="sidebar-link w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600">
                 <i class="fas fa-horse w-5"></i><span>Equinos</span>
             </button>
-            <button onclick="switchTab('canes')" class="sidebar-link w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-blue-50 transition-all">
+            <button onclick="switchTab('canes')" class="sidebar-link w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600">
                 <i class="fas fa-dog w-5"></i><span>Canes</span>
             </button>
-            <p class="text-xs font-semibold text-gray-400 uppercase px-3 mt-4 mb-2">Administración</p>
-            <button onclick="switchTab('contratos')" class="sidebar-link w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-blue-50 transition-all">
-                <i class="fas fa-file-contract w-5"></i><span>Contratos</span>
+            <button onclick="switchTab('contratos')" class="sidebar-link w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600">
+                <i class="fas fa-file-signature w-5"></i><span>Contratos</span>
             </button>
-            
-            <div class="pt-4 mt-4 border-t">
-                <button onclick="updateData()" class="w-full flex items-center justify-center space-x-2 px-3 py-3 bg-primary text-white rounded-lg text-xs font-bold hover:bg-blue-800 transition-all">
-                    <i class="fas fa-sync-alt" id="sync-icon"></i><span>SINCRONIZAR</span>
+            <div class="pt-4 mt-4 border-t border-gray-100">
+                <button onclick="updateData()" class="w-full bg-primary text-white py-2 rounded-lg text-xs font-bold flex items-center justify-center space-x-2">
+                    <i class="fas fa-sync" id="sync-icon"></i><span>SINCRONIZAR</span>
                 </button>
             </div>
         </aside>
 
-        <main class="flex-1 p-4 md:p-6 overflow-y-auto">
+        <main class="flex-1 p-6 overflow-y-auto">
             
             <div id="dashboard" class="tab-content active space-y-6">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <h2 class="text-xl font-bold text-gray-800">Estado Situacional: <span id="display-unit" class="text-blue-600">UNIDAD NACIONAL</span></h2>
-                    <div class="flex items-center space-x-2 bg-white p-2 rounded-lg shadow-sm border border-gray-200">
-                        <i class="fas fa-calendar-alt text-gray-400 text-xs"></i>
-                        <input type="date" id="date-from" onchange="applyGlobalFilter()" class="text-xs focus:outline-none">
-                        <span class="text-gray-400">|</span>
-                        <input type="date" id="date-to" onchange="applyGlobalFilter()" class="text-xs focus:outline-none">
-                    </div>
-                </div>
+                <h2 class="text-xl font-bold">Resumen General: <span id="display-unit" class="text-blue-600">NACIONAL</span></h2>
                 
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                    <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-success">
-                        <p class="text-gray-400 text-[10px] font-bold uppercase">Veh. Operativos</p>
-                        <h3 id="kpi-v-op" class="text-xl font-bold text-success">0</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="card-dash">
+                        <h3 class="text-xs font-bold text-gray-500 uppercase mb-3">Flota Vehicular</h3>
+                        <canvas id="chartVehiculos"></canvas>
                     </div>
-                    <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-maintenance">
-                        <p class="text-gray-400 text-[10px] font-bold uppercase">Veh. En Taller</p>
-                        <h3 id="kpi-v-maint" class="text-xl font-bold text-maintenance">0</h3>
+                    <div class="card-dash">
+                        <h3 class="text-xs font-bold text-gray-500 uppercase mb-3">Armamento (Estado)</h3>
+                        <canvas id="chartArmamento"></canvas>
                     </div>
-                    <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-accent">
-                        <p class="text-gray-400 text-[10px] font-bold uppercase">Siniestrados</p>
-                        <h3 id="kpi-v-crash" class="text-xl font-bold text-accent">0</h3>
+                    <div class="card-dash">
+                        <h3 class="text-xs font-bold text-gray-500 uppercase mb-3">Canes vs Equinos</h3>
+                        <canvas id="chartSemovientes"></canvas>
                     </div>
-                    <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-blue-500">
-                        <p class="text-gray-400 text-[10px] font-bold uppercase">Total Armas</p>
-                        <h3 id="kpi-armamento" class="text-xl font-bold text-blue-600">0</h3>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-orange-600">
-                        <p class="text-gray-400 text-[10px] font-bold uppercase">Semovientes</p>
-                        <h3 id="kpi-semovientes" class="text-xl font-bold text-orange-600">0</h3>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-dark">
-                        <p class="text-gray-400 text-[10px] font-bold uppercase">Cont. Vencidos</p>
-                        <h3 id="kpi-contratos-venc" class="text-xl font-bold text-dark">0</h3>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                        <h3 class="font-bold mb-4 text-gray-700 text-sm">Estado Flota Vehicular</h3>
-                        <div class="relative h-64"><canvas id="chartPieDetail"></canvas></div>
-                    </div>
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                        <h3 class="font-bold mb-4 text-gray-700 text-sm">Estado Armamento</h3>
-                        <div class="relative h-64"><canvas id="chartArmamento"></canvas></div>
-                    </div>
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                        <h3 class="font-bold mb-4 text-gray-700 text-sm">Distribución Semovientes</h3>
-                        <div class="relative h-64"><canvas id="chartSemovientes"></canvas></div>
+                    <div class="card-dash">
+                        <h3 class="text-xs font-bold text-gray-500 uppercase mb-3">Contratos</h3>
+                        <canvas id="chartContratos"></canvas>
                     </div>
                 </div>
             </div>
 
-            <div id="vehiculos" class="tab-content space-y-6">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <h2 class="text-xl font-bold text-gray-800">Control de Parque Automotor</h2>
-                    <select id="filter-veh-status" onchange="applyGlobalFilter()" class="text-xs border rounded-lg px-2 py-1">
-                        <option value="ALL">Todos los Estados</option>
-                        <option value="OPERATIVO">Operativos</option>
-                        <option value="MANTENIMIENTO">En Taller</option>
-                    </select>
+            <div id="armamento" class="tab-content space-y-8">
+                <h2 class="text-xl font-bold">Armamento y Material CS</h2>
+                <div class="bg-white rounded-xl shadow border">
+                    <div class="bg-blue-600 text-white px-4 py-2 text-xs font-bold rounded-t-xl">TABLA: ARMAMENTO</div>
+                    <div class="table-container"><table class="w-full text-left text-xs"><tbody id="tabla-armas" class="divide-y"></tbody></table></div>
                 </div>
-                <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+                <div class="bg-white rounded-xl shadow border">
+                    <div class="bg-orange-500 text-white px-4 py-2 text-xs font-bold rounded-t-xl">TABLA: MUNICIÓN</div>
+                    <div class="table-container"><table class="w-full text-left text-xs"><tbody id="tabla-municion" class="divide-y"></tbody></table></div>
+                </div>
+                <div class="bg-white rounded-xl shadow border">
+                    <div class="bg-green-600 text-white px-4 py-2 text-xs font-bold rounded-t-xl">TABLA: MATERIAL CS</div>
+                    <div class="table-container"><table class="w-full text-left text-xs"><tbody id="tabla-materialcs" class="divide-y"></tbody></table></div>
+                </div>
+            </div>
+
+            <div id="vehiculos" class="tab-content">
+                <div class="bg-white rounded-xl shadow border p-4">
+                    <h2 class="text-xl font-bold mb-4">Parque Automotor</h2>
                     <div class="table-container">
-                        <table class="w-full text-left text-sm">
-                            <thead class="bg-gray-50 border-b">
-                                <tr class="text-[11px] uppercase text-gray-500 tracking-wider">
-                                    <th class="px-4 py-3 font-bold">Vehículo</th>
-                                    <th class="px-4 py-3 font-bold">Unidad / Zona</th>
-                                    <th class="px-4 py-3 font-bold">Estado</th>
-                                    <th class="px-4 py-3 font-bold">Tiempo</th>
-                                    <th class="px-4 py-3 font-bold">Observaciones</th>
-                                </tr>
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-gray-100 uppercase font-bold text-gray-600">
+                                <tr><th class="px-4 py-2">Vehículo</th><th class="px-4 py-2">Unidad</th><th class="px-4 py-2">Estado</th></tr>
                             </thead>
                             <tbody id="tabla-vehiculos" class="divide-y"></tbody>
                         </table>
@@ -180,44 +136,9 @@
                 </div>
             </div>
 
-            <div id="armamento" class="tab-content space-y-6">
-                <h2 class="text-xl font-bold text-gray-800">Armamento y Material CS</h2>
-                <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
-                    <div class="table-container">
-                        <table class="w-full text-left text-sm">
-                            <thead class="bg-gray-50 border-b">
-                                <tr class="text-[11px] uppercase text-gray-500 tracking-wider">
-                                    <th class="px-4 py-3">Categoría</th><th class="px-4 py-3">Tipo</th>
-                                    <th class="px-4 py-3">Unidad</th><th class="px-4 py-3">Cant.</th>
-                                    <th class="px-4 py-3">Estado</th><th class="px-4 py-3">Vencimiento</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabla-armamento" class="divide-y"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div id="equinos" class="tab-content space-y-6">
-                <h2 class="text-xl font-bold text-gray-800">Semovientes Equinos</h2>
-                <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
-                    <div class="table-container"><table class="w-full text-left text-sm"><thead class="bg-gray-50 border-b"><tr class="text-[11px] uppercase text-gray-500 tracking-wider"><th class="px-4 py-3">ID</th><th class="px-4 py-3">Raza</th><th class="px-4 py-3">Unidad</th><th class="px-4 py-3">Salud</th></tr></thead><tbody id="tabla-equinos" class="divide-y"></tbody></table></div>
-                </div>
-            </div>
-
-            <div id="canes" class="tab-content space-y-6">
-                <h2 class="text-xl font-bold text-gray-800">Semovientes Canes</h2>
-                <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
-                    <div class="table-container"><table class="w-full text-left text-sm"><thead class="bg-gray-50 border-b"><tr class="text-[11px] uppercase text-gray-500 tracking-wider"><th class="px-4 py-3">ID</th><th class="px-4 py-3">Especialidad</th><th class="px-4 py-3">Unidad</th><th class="px-4 py-3">Salud</th></tr></thead><tbody id="tabla-canes" class="divide-y"></tbody></table></div>
-                </div>
-            </div>
-
-            <div id="contratos" class="tab-content space-y-6">
-                <h2 class="text-xl font-bold text-gray-800">Contratos Logísticos</h2>
-                <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
-                    <div class="table-container"><table class="w-full text-left text-sm"><thead class="bg-gray-50 border-b"><tr class="text-[11px] uppercase text-gray-500 tracking-wider"><th class="px-4 py-3">Objeto</th><th class="px-4 py-3">Responsable</th><th class="px-4 py-3">Inicio</th><th class="px-4 py-3">Fin</th><th class="px-4 py-3">Estado</th></tr></thead><tbody id="tabla-contratos" class="divide-y"></tbody></table></div>
-                </div>
-            </div>
+            <div id="equinos" class="tab-content"><div class="bg-white p-4 rounded-xl shadow border"><h2 class="font-bold mb-4">Equinos</h2><div class="table-container"><table class="w-full text-xs text-left"><tbody id="tabla-equinos" class="divide-y"></tbody></table></div></div></div>
+            <div id="canes" class="tab-content"><div class="bg-white p-4 rounded-xl shadow border"><h2 class="font-bold mb-4">Canes</h2><div class="table-container"><table class="w-full text-xs text-left"><tbody id="tabla-canes" class="divide-y"></tbody></table></div></div></div>
+            <div id="contratos" class="tab-content"><div class="bg-white p-4 rounded-xl shadow border"><h2 class="font-bold mb-4">Contratos</h2><div class="table-container"><table class="w-full text-xs text-left"><tbody id="tabla-contratos" class="divide-y"></tbody></table></div></div></div>
 
         </main>
     </div>
@@ -225,9 +146,6 @@
     <script>
         let charts = {};
         let rawData = null;
-        const today = new Date();
-        
-        // REEMPLAZA ESTA URL CON LA DE TU NUEVA IMPLEMENTACIÓN SI CAMBIA
         const API_URL = 'https://script.google.com/macros/s/AKfycbzKzM_A-fa5NHn0unv0O3JYiOdZySWalcZ4py9elbwC4A1JlMNXCtlE_K1FjQ8MxWQ/exec';
 
         function switchTab(id) {
@@ -242,15 +160,14 @@
             const icon = document.getElementById('sync-icon');
             icon.classList.add('animate-spin');
             try {
-                const response = await fetch(API_URL, { method: 'GET', redirect: 'follow' });
+                const response = await fetch(API_URL);
                 const data = await response.json();
                 if(data.status === "success") {
                     rawData = data;
                     applyGlobalFilter();
                 }
             } catch (e) {
-                console.error("Error:", e);
-                alert("Error al conectar con Google Sheets.");
+                alert("Error sincronizando");
             } finally {
                 icon.classList.remove('animate-spin');
             }
@@ -259,154 +176,81 @@
         function applyGlobalFilter() {
             if (!rawData) return;
             const unit = document.getElementById('global-unit-filter').value;
-            const statusFilter = document.getElementById('filter-veh-status').value;
-            const dFrom = document.getElementById('date-from').value;
-            const dTo = document.getElementById('date-to').value;
-
-            document.getElementById('display-unit').innerText = unit === 'ALL' ? 'UNIDAD NACIONAL' : unit;
             const matchesUnit = (item) => unit === 'ALL' || String(item.Unidad).toUpperCase() === unit.toUpperCase();
-            
-            // Filtros Vehículos
-            const fVeh = rawData.vehiculos.filter(v => {
-                const mU = matchesUnit(v);
-                const mS = statusFilter === 'ALL' || String(v.Estado).toUpperCase() === statusFilter.toUpperCase();
-                let mD = true;
-                if(dFrom || dTo) {
-                    const d = new Date(v.FechaReg);
-                    if(dFrom && d < new Date(dFrom)) mD = false;
-                    if(dTo && d > new Date(dTo)) mD = false;
-                }
-                return mU && mS && mD;
-            });
 
-            // Filtros otros apartados
+            // Filtrado
+            const fVeh = rawData.vehiculos.filter(matchesUnit);
             const fArma = rawData.armamento.filter(matchesUnit);
             const fEqui = rawData.equinos.filter(matchesUnit);
             const fCane = rawData.canes.filter(matchesUnit);
             const fCont = rawData.contratos.filter(matchesUnit);
 
-            // Render Tablas
+            // Renders
             renderVehiculos(fVeh);
-            renderArmamento(fArma);
-            renderEquinos(fEqui);
-            renderCanes(fCane);
-            renderContratos(fCont);
-            
-            // Update Dashboard
-            updateKPIs(fVeh, fArma, fEqui, fCane, fCont);
-            renderCharts(fVeh, fArma, fEqui, fCane);
+            renderArmamentoEspecial(fArma);
+            renderSimpleTable('tabla-equinos', fEqui);
+            renderSimpleTable('tabla-canes', fCane);
+            renderSimpleTable('tabla-contratos', fCont);
+
+            // Dashboard
+            renderDashboard(fVeh, fArma, fEqui, fCane, fCont);
+            document.getElementById('display-unit').innerText = unit === 'ALL' ? 'NACIONAL' : unit;
         }
 
-        function updateKPIs(v, a, e, c, k) {
-            const getCount = (arr, s) => arr.filter(x => String(x.Estado).toUpperCase() === s).length;
-            
-            document.getElementById('kpi-v-op').innerText = getCount(v, 'OPERATIVO');
-            document.getElementById('kpi-v-maint').innerText = getCount(v, 'MANTENIMIENTO');
-            document.getElementById('kpi-v-crash').innerText = getCount(v, 'SINIESTRADO');
-            
-            // Suma total de cantidades de armamento
-            document.getElementById('kpi-armamento').innerText = a.reduce((sum, item) => sum + (parseInt(item.Cantidad) || 0), 0);
-            
-            // Total Semovientes
-            document.getElementById('kpi-semovientes').innerText = e.length + c.length;
-            
-            // Contratos vencidos
-            const vencidos = k.filter(item => item.Fin && new Date(item.Fin) < today).length;
-            document.getElementById('kpi-contratos-venc').innerText = vencidos;
-        }
-
-        function getStatusClass(status) {
-            const s = String(status).toUpperCase();
-            if(s.includes('OPERATIVO')) return 'bg-green-100 text-green-700';
-            if(s.includes('MANTENIMIENTO')) return 'bg-purple-100 text-purple-700';
-            if(s.includes('SINIESTRADO')) return 'bg-red-100 text-red-700';
-            return 'bg-gray-100 text-gray-700';
-        }
-
-        // --- FUNCIONES RENDER (MISMAS QUE TU CODIGO ORIGINAL) ---
-        function renderVehiculos(lista) {
-            document.getElementById('tabla-vehiculos').innerHTML = lista.map(v => `
-                <tr class="hover:bg-gray-50 border-b">
-                    <td class="px-4 py-4"><div class="font-bold">${v.Placa || 'N/A'}</div><div class="text-[10px] uppercase">${v.Tipo || ''}</div></td>
-                    <td class="px-4 py-4 text-xs"><div class="font-bold text-blue-700">${v.Unidad || ''}</div><div>${v.Zona || ''}</div></td>
-                    <td class="px-4 py-4"><span class="status-badge ${getStatusClass(v.Estado)}">${v.SubEstado || v.Estado || 'N/A'}</span></td>
-                    <td class="px-4 py-4 text-xs"><b>${v.Dias || 0}</b> días</td>
-                    <td class="px-4 py-4 text-[11px] italic">${v.Observaciones || '-'}</td>
-                </tr>
+        function renderVehiculos(data) {
+            document.getElementById('tabla-vehiculos').innerHTML = data.map(v => `
+                <tr><td class="px-4 py-2 font-bold">${v.Placa || 'S/P'}</td><td class="px-4 py-2">${v.Unidad}</td><td class="px-4 py-2">${v.Estado}</td></tr>
             `).join('');
         }
 
-        function renderArmamento(lista) {
-            document.getElementById('tabla-armamento').innerHTML = lista.map(a => `
-                <tr class="hover:bg-gray-50 border-b text-xs">
-                    <td class="px-4 py-3 font-bold">${a.Categoria || 'N/A'}</td><td class="px-4 py-3">${a.Tipo || 'N/A'}</td>
-                    <td class="px-4 py-3 text-blue-700">${a.Unidad || 'N/A'}</td><td class="px-4 py-3 font-bold">${a.Cantidad || 0}</td>
-                    <td class="px-4 py-3">${a.Estado || 'N/A'}</td><td class="px-4 py-3">${a.Vencimiento || 'N/A'}</td>
-                </tr>`).join('');
-        }
+        function renderArmamentoEspecial(data) {
+            const armas = data.filter(a => String(a.Categoria).toUpperCase().includes('ARMA'));
+            const muni = data.filter(a => String(a.Categoria).toUpperCase().includes('MUNI'));
+            const cs = data.filter(a => String(a.Categoria).toUpperCase().includes('CS') || String(a.Categoria).toUpperCase().includes('MATERIAL'));
 
-        function renderEquinos(lista) {
-            document.getElementById('tabla-equinos').innerHTML = lista.map(e => `
-                <tr class="hover:bg-gray-50 border-b text-xs">
-                    <td class="px-4 py-3 font-bold">${e.ID || 'N/A'}</td><td class="px-4 py-3">${e.Raza || 'N/A'}</td>
-                    <td class="px-4 py-3">${e.Unidad || 'N/A'}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded bg-orange-100 text-orange-700">${e.Salud || 'N/A'}</span></td>
-                </tr>`).join('');
-        }
-
-        function renderCanes(lista) {
-            document.getElementById('tabla-canes').innerHTML = lista.map(c => `
-                <tr class="hover:bg-gray-50 border-b text-xs">
-                    <td class="px-4 py-3 font-bold">${c.ID || 'N/A'}</td><td class="px-4 py-3">${c.Especialidad || 'N/A'}</td>
-                    <td class="px-4 py-3">${c.Unidad || 'N/A'}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded bg-green-100 text-green-700">${c.Salud || 'N/A'}</span></td>
-                </tr>`).join('');
-        }
-
-        function renderContratos(lista) {
-            document.getElementById('tabla-contratos').innerHTML = lista.map(k => {
-                const vencido = k.Fin && new Date(k.Fin) < today;
-                return `<tr class="hover:bg-gray-50 border-b text-xs">
-                    <td class="px-4 py-4 font-bold">${k.Objeto || 'N/A'}</td><td class="px-4 py-4">${k.Unidad || 'N/A'}</td>
-                    <td class="px-4 py-4">${k.Inicio || ''}</td><td class="px-4 py-4 font-bold ${vencido ? 'text-red-600' : ''}">${k.Fin || ''}</td>
-                    <td class="px-4 py-4"><span class="px-2 py-1 rounded text-[9px] font-bold ${vencido ? 'bg-red-100' : 'bg-green-100'}">${vencido ? 'VENCIDO' : 'ACTIVO'}</span></td>
-                </tr>`}).join('');
-        }
-
-        function renderCharts(v, a, e, c) {
-            const counts = (s) => v.filter(x => String(x.Estado).toUpperCase() === s).length;
+            const row = (a) => `<tr><td class="px-4 py-2 font-bold">${a.Tipo}</td><td class="px-4 py-2">${a.Unidad}</td><td class="px-4 py-2 font-bold">${a.Cantidad}</td></tr>`;
             
-            // 1. Gráfico Vehículos
-            if(charts.pie) charts.pie.destroy();
-            charts.pie = new Chart(document.getElementById('chartPieDetail'), {
-                type: 'pie',
-                data: {
-                    labels: ['Op', 'Taller', 'Siniestro'],
-                    datasets: [{ data: [counts('OPERATIVO'), counts('MANTENIMIENTO'), counts('SINIESTRADO')], backgroundColor: ['#10b981', '#8b5cf6', '#ef4444'] }]
-                },
-                options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
-            });
+            document.getElementById('tabla-armas').innerHTML = armas.map(row).join('');
+            document.getElementById('tabla-municion').innerHTML = muni.map(row).join('');
+            document.getElementById('tabla-materialcs').innerHTML = cs.map(row).join('');
+        }
 
-            // 2. Gráfico Armamento (Doughnut)
-            const estArma = {};
-            a.forEach(x => estArma[x.Estado] = (estArma[x.Estado] || 0) + (parseInt(x.Cantidad) || 0));
-            if(charts.arma) charts.arma.destroy();
-            charts.arma = new Chart(document.getElementById('chartArmamento'), {
+        function renderSimpleTable(id, data) {
+            document.getElementById(id).innerHTML = data.map(item => `
+                <tr><td class="px-4 py-2 font-bold">${item.ID || item.Objeto || 'N/A'}</td><td class="px-4 py-2">${item.Unidad}</td><td class="px-4 py-2">${item.Salud || item.Estado || ''}</td></tr>
+            `).join('');
+        }
+
+        function renderDashboard(v, a, e, c, k) {
+            // Vehiculos (Op vs No Op)
+            const vOp = v.filter(x => String(x.Estado).toUpperCase().includes('OPERATIVO')).length;
+            createPie('chartVehiculos', ['Op', 'No Op'], [vOp, v.length - vOp], ['#10b981', '#ef4444']);
+
+            // Armamento (Por Estado)
+            const aBueno = a.filter(x => String(x.Estado).toUpperCase().includes('BUENO')).length;
+            createPie('chartArmamento', ['Bueno', 'Otros'], [aBueno, a.length - aBueno], ['#3b82f6', '#94a3b8']);
+
+            // Semovientes
+            createPie('chartSemovientes', ['Equinos', 'Canes'], [e.length, c.length], ['#b45309', '#059669']);
+
+            // Contratos
+            const kAct = k.filter(x => String(x.Estado).toUpperCase().includes('ACTIVO')).length;
+            createPie('chartContratos', ['Activos', 'Otros'], [kAct, k.length - kAct], ['#8b5cf6', '#cbd5e1']);
+        }
+
+        function createPie(id, labels, data, colors) {
+            if(charts[id]) charts[id].destroy();
+            const ctx = document.getElementById(id).getContext('2d');
+            charts[id] = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: Object.keys(estArma),
-                    datasets: [{ data: Object.values(estArma), backgroundColor: ['#1e3a8a', '#3b82f6', '#ef4444', '#f59e0b'] }]
+                    labels: labels,
+                    datasets: [{ data: data, backgroundColor: colors }]
                 },
-                options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
-            });
-
-            // 3. Gráfico Semovientes (Pie)
-            if(charts.semov) charts.semov.destroy();
-            charts.semov = new Chart(document.getElementById('chartSemovientes'), {
-                type: 'pie',
-                data: {
-                    labels: ['Equinos', 'Canes'],
-                    datasets: [{ data: [e.length, c.length], backgroundColor: ['#b45309', '#059669'] }]
-                },
-                options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+                options: { 
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 8, font: { size: 9 } } } }
+                }
             });
         }
 
