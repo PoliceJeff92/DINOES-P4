@@ -304,62 +304,19 @@
             });
         }
 
-                async function updateData() {
+        async function updateData() {
             const icon = document.getElementById('sync-icon');
             icon.classList.add('animate-spin');
             
             try {
-                // Método JSONP para evitar CORS
-                const callbackName = 'dinoesCallback_' + Date.now();
-                
-                // Crear script para JSONP
-                const script = document.createElement('script');
-                script.src = `${API_URL}?callback=${callbackName}&_=${Date.now()}`;
-                
-                // Crear función global temporal
-                window[callbackName] = function(data) {
-                    rawData = data;
-                    applyGlobalFilter();
-                    
-                    // Limpiar
-                    document.head.removeChild(script);
-                    delete window[callbackName];
-                    
-                    setTimeout(() => {
-                        icon.classList.remove('animate-spin');
-                    }, 300);
-                };
-                
-                // Manejar errores
-                script.onerror = function() {
-                    console.error('Error cargando datos JSONP');
-                    document.head.removeChild(script);
-                    delete window[callbackName];
-                    
-                    // Datos de prueba si falla
-                    rawData = getMockData();
-                    applyGlobalFilter();
-                    icon.classList.remove('animate-spin');
-                };
-                
-                document.head.appendChild(script);
-                
-                // Timeout de seguridad (10 segundos)
-                setTimeout(() => {
-                    if (window[callbackName]) {
-                        console.log('Timeout - usando datos de prueba');
-                        rawData = getMockData();
-                        applyGlobalFilter();
-                        icon.classList.remove('animate-spin');
-                        delete window[callbackName];
-                    }
-                }, 10000);
-                
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                rawData = data;
+                applyGlobalFilter();
             } catch (error) {
-                console.error('Error:', error);
-                icon.classList.remove('animate-spin');
+                console.error('Error al cargar datos:', error);
+                alert('Error al sincronizar datos. Verifica la URL del API.');
             }
-        }
             
             setTimeout(() => icon.classList.remove('animate-spin'), 600);
         }
