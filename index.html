@@ -35,7 +35,6 @@
         .table-container { overflow-x: auto; }
         canvas { max-height: 280px; }
         .status-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 9999px; text-transform: uppercase; }
-        .bg-expired { background-color: #fee2e2 !important; }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
@@ -45,7 +44,7 @@
             <div class="flex items-center space-x-3">
                 <div class="bg-blue-600 p-2 rounded-lg"><i class="fas fa-shield-alt text-xl"></i></div>
                 <div>
-                    <h1 class="text-sm md:text-lg font-bold leading-tight uppercase">DIRECCIÓN NACIONAL DE OPERACIONES ESPECIALES Y SERVICIOS ESPECIALIZADOS</h1>
+                    <h1 class="text-sm md:text-lg font-bold leading-tight uppercase">DIRECCIÓN NACIONAL DE OPERACIONES ESPECIALES</h1>
                     <p class="text-[10px] uppercase tracking-widest opacity-70">Departamento de Logística DINOES JJMAV1.0</p>
                 </div>
             </div>
@@ -91,7 +90,7 @@
                 <i class="fas fa-file-contract w-5"></i><span>Contratos</span>
             </button>
             
-            <div class="pt-4 mt-4">
+            <div class="pt-4 mt-4 border-t">
                 <button onclick="updateData()" class="w-full flex items-center justify-center space-x-2 px-3 py-3 bg-primary text-white rounded-lg text-xs font-bold hover:bg-blue-800 transition-all">
                     <i class="fas fa-sync-alt" id="sync-icon"></i><span>SINCRONIZAR</span>
                 </button>
@@ -113,49 +112,43 @@
                 
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                     <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-success">
-                        <p class="text-gray-400 text-[10px] font-bold uppercase">Operativos</p>
+                        <p class="text-gray-400 text-[10px] font-bold uppercase">Veh. Operativos</p>
                         <h3 id="kpi-v-op" class="text-xl font-bold text-success">0</h3>
                     </div>
                     <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-maintenance">
-                        <p class="text-gray-400 text-[10px] font-bold uppercase">En Taller</p>
+                        <p class="text-gray-400 text-[10px] font-bold uppercase">Veh. En Taller</p>
                         <h3 id="kpi-v-maint" class="text-xl font-bold text-maintenance">0</h3>
                     </div>
                     <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-accent">
                         <p class="text-gray-400 text-[10px] font-bold uppercase">Siniestrados</p>
                         <h3 id="kpi-v-crash" class="text-xl font-bold text-accent">0</h3>
                     </div>
-                    <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-warning">
-                        <p class="text-gray-400 text-[10px] font-bold uppercase">Logística</p>
-                        <h3 id="kpi-v-parts" class="text-xl font-bold text-warning">0</h3>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-blue-500">
+                        <p class="text-gray-400 text-[10px] font-bold uppercase">Total Armas</p>
+                        <h3 id="kpi-armamento" class="text-xl font-bold text-blue-600">0</h3>
                     </div>
                     <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-orange-600">
-                        <p class="text-gray-400 text-[10px] font-bold uppercase">Presupuesto</p>
-                        <h3 id="kpi-v-budget" class="text-xl font-bold text-orange-600">0</h3>
+                        <p class="text-gray-400 text-[10px] font-bold uppercase">Semovientes</p>
+                        <h3 id="kpi-semovientes" class="text-xl font-bold text-orange-600">0</h3>
                     </div>
                     <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-dark">
-                        <p class="text-gray-400 text-[10px] font-bold uppercase">Retenidos</p>
-                        <h3 id="kpi-v-held" class="text-xl font-bold text-dark">0</h3>
+                        <p class="text-gray-400 text-[10px] font-bold uppercase">Cont. Vencidos</p>
+                        <h3 id="kpi-contratos-venc" class="text-xl font-bold text-dark">0</h3>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                        <h3 class="font-bold mb-4 text-gray-700">Estado Operativo de Flota</h3>
-                        <div class="relative h-64">
-                            <canvas id="chartPieDetail"></canvas>
-                        </div>
+                        <h3 class="font-bold mb-4 text-gray-700 text-sm">Estado Flota Vehicular</h3>
+                        <div class="relative h-64"><canvas id="chartPieDetail"></canvas></div>
                     </div>
                     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                        <h3 class="font-bold mb-4 text-gray-700">Distribución por Zonas</h3>
-                        <div class="relative h-64">
-                            <canvas id="chartPieZones"></canvas>
-                        </div>
+                        <h3 class="font-bold mb-4 text-gray-700 text-sm">Estado Armamento</h3>
+                        <div class="relative h-64"><canvas id="chartArmamento"></canvas></div>
                     </div>
                     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                        <h3 class="font-bold mb-4 text-gray-700">Recursos por Unidad</h3>
-                        <div class="relative h-64">
-                            <canvas id="chartZones"></canvas>
-                        </div>
+                        <h3 class="font-bold mb-4 text-gray-700 text-sm">Distribución Semovientes</h3>
+                        <div class="relative h-64"><canvas id="chartSemovientes"></canvas></div>
                     </div>
                 </div>
             </div>
@@ -163,17 +156,12 @@
             <div id="vehiculos" class="tab-content space-y-6">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <h2 class="text-xl font-bold text-gray-800">Control de Parque Automotor</h2>
-                    <select id="filter-veh-status" onchange="applyGlobalFilter()" class="text-xs border rounded-lg px-2 py-1 focus:ring-2 ring-blue-500">
+                    <select id="filter-veh-status" onchange="applyGlobalFilter()" class="text-xs border rounded-lg px-2 py-1">
                         <option value="ALL">Todos los Estados</option>
                         <option value="OPERATIVO">Operativos</option>
                         <option value="MANTENIMIENTO">En Taller</option>
-                        <option value="SINIESTRADO">Siniestrados</option>
-                        <option value="LOGISTICA">Logística (L/B)</option>
-                        <option value="PRESUPUESTO">Falta Presupuesto</option>
-                        <option value="RETENIDO">Retenidos</option>
                     </select>
                 </div>
-
                 <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
                     <div class="table-container">
                         <table class="w-full text-left text-sm">
@@ -194,22 +182,41 @@
 
             <div id="armamento" class="tab-content space-y-6">
                 <h2 class="text-xl font-bold text-gray-800">Armamento y Material CS</h2>
-                <div class="bg-white rounded-xl shadow-sm border overflow-hidden"><div class="table-container"><table class="w-full text-left text-sm"><thead class="bg-gray-50 border-b"><tr class="text-[11px] uppercase text-gray-500 tracking-wider"><th class="px-4 py-3">Categoría</th><th class="px-4 py-3">Tipo</th><th class="px-4 py-3">Unidad</th><th class="px-4 py-3">Cant.</th><th class="px-4 py-3">Estado</th><th class="px-4 py-3">Vencimiento</th></tr></thead><tbody id="tabla-armamento" class="divide-y"></tbody></table></div></div>
+                <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+                    <div class="table-container">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-gray-50 border-b">
+                                <tr class="text-[11px] uppercase text-gray-500 tracking-wider">
+                                    <th class="px-4 py-3">Categoría</th><th class="px-4 py-3">Tipo</th>
+                                    <th class="px-4 py-3">Unidad</th><th class="px-4 py-3">Cant.</th>
+                                    <th class="px-4 py-3">Estado</th><th class="px-4 py-3">Vencimiento</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-armamento" class="divide-y"></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
             <div id="equinos" class="tab-content space-y-6">
                 <h2 class="text-xl font-bold text-gray-800">Semovientes Equinos</h2>
-                <div class="bg-white rounded-xl shadow-sm border overflow-hidden"><div class="table-container"><table class="w-full text-left text-sm"><thead class="bg-gray-50 border-b"><tr class="text-[11px] uppercase text-gray-500 tracking-wider"><th class="px-4 py-3">ID</th><th class="px-4 py-3">Raza</th><th class="px-4 py-3">Unidad</th><th class="px-4 py-3">Salud</th></tr></thead><tbody id="tabla-equinos" class="divide-y"></tbody></table></div></div>
+                <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+                    <div class="table-container"><table class="w-full text-left text-sm"><thead class="bg-gray-50 border-b"><tr class="text-[11px] uppercase text-gray-500 tracking-wider"><th class="px-4 py-3">ID</th><th class="px-4 py-3">Raza</th><th class="px-4 py-3">Unidad</th><th class="px-4 py-3">Salud</th></tr></thead><tbody id="tabla-equinos" class="divide-y"></tbody></table></div>
+                </div>
             </div>
 
             <div id="canes" class="tab-content space-y-6">
                 <h2 class="text-xl font-bold text-gray-800">Semovientes Canes</h2>
-                <div class="bg-white rounded-xl shadow-sm border overflow-hidden"><div class="table-container"><table class="w-full text-left text-sm"><thead class="bg-gray-50 border-b"><tr class="text-[11px] uppercase text-gray-500 tracking-wider"><th class="px-4 py-3">ID</th><th class="px-4 py-3">Especialidad</th><th class="px-4 py-3">Unidad</th><th class="px-4 py-3">Salud</th></tr></thead><tbody id="tabla-canes" class="divide-y"></tbody></table></div></div>
+                <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+                    <div class="table-container"><table class="w-full text-left text-sm"><thead class="bg-gray-50 border-b"><tr class="text-[11px] uppercase text-gray-500 tracking-wider"><th class="px-4 py-3">ID</th><th class="px-4 py-3">Especialidad</th><th class="px-4 py-3">Unidad</th><th class="px-4 py-3">Salud</th></tr></thead><tbody id="tabla-canes" class="divide-y"></tbody></table></div>
+                </div>
             </div>
 
             <div id="contratos" class="tab-content space-y-6">
                 <h2 class="text-xl font-bold text-gray-800">Contratos Logísticos</h2>
-                <div class="bg-white rounded-xl shadow-sm border overflow-hidden"><div class="table-container"><table class="w-full text-left text-sm"><thead class="bg-gray-50 border-b"><tr class="text-[11px] uppercase text-gray-500 tracking-wider"><th class="px-4 py-3">Objeto</th><th class="px-4 py-3">Responsable</th><th class="px-4 py-3">Inicio</th><th class="px-4 py-3">Fin</th><th class="px-4 py-3">Estado</th></tr></thead><tbody id="tabla-contratos" class="divide-y"></tbody></table></div></div>
+                <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+                    <div class="table-container"><table class="w-full text-left text-sm"><thead class="bg-gray-50 border-b"><tr class="text-[11px] uppercase text-gray-500 tracking-wider"><th class="px-4 py-3">Objeto</th><th class="px-4 py-3">Responsable</th><th class="px-4 py-3">Inicio</th><th class="px-4 py-3">Fin</th><th class="px-4 py-3">Estado</th></tr></thead><tbody id="tabla-contratos" class="divide-y"></tbody></table></div>
+                </div>
             </div>
 
         </main>
@@ -220,7 +227,7 @@
         let rawData = null;
         const today = new Date();
         
-        // REEMPLAZA ESTA URL CON LA DE TU NUEVA IMPLEMENTACIÓN
+        // REEMPLAZA ESTA URL CON LA DE TU NUEVA IMPLEMENTACIÓN SI CAMBIA
         const API_URL = 'https://script.google.com/macros/s/AKfycbzKzM_A-fa5NHn0unv0O3JYiOdZySWalcZ4py9elbwC4A1JlMNXCtlE_K1FjQ8MxWQ/exec';
 
         function switchTab(id) {
@@ -235,24 +242,15 @@
             const icon = document.getElementById('sync-icon');
             icon.classList.add('animate-spin');
             try {
-                // MODIFICACIÓN PARA EVITAR ERROR DE CORS
-                const response = await fetch(API_URL, {
-                    method: 'GET',
-                    mode: 'cors',
-                    redirect: 'follow'
-                });
-                
-                if (!response.ok) throw new Error('Error en la red');
-                
+                const response = await fetch(API_URL, { method: 'GET', redirect: 'follow' });
                 const data = await response.json();
                 if(data.status === "success") {
                     rawData = data;
                     applyGlobalFilter();
-                    console.log("Sincronización exitosa");
                 }
             } catch (e) {
-                console.error("Error de sincronización:", e);
-                alert("Error al conectar con el servidor de Google Sheets. Asegúrate de haber publicado el script como 'Cualquiera'.");
+                console.error("Error:", e);
+                alert("Error al conectar con Google Sheets.");
             } finally {
                 icon.classList.remove('animate-spin');
             }
@@ -266,10 +264,10 @@
             const dTo = document.getElementById('date-to').value;
 
             document.getElementById('display-unit').innerText = unit === 'ALL' ? 'UNIDAD NACIONAL' : unit;
-
             const matchesUnit = (item) => unit === 'ALL' || String(item.Unidad).toUpperCase() === unit.toUpperCase();
             
-            const filteredVehiculos = rawData.vehiculos.filter(v => {
+            // Filtros Vehículos
+            const fVeh = rawData.vehiculos.filter(v => {
                 const mU = matchesUnit(v);
                 const mS = statusFilter === 'ALL' || String(v.Estado).toUpperCase() === statusFilter.toUpperCase();
                 let mD = true;
@@ -281,24 +279,40 @@
                 return mU && mS && mD;
             });
 
-            renderVehiculos(filteredVehiculos);
-            renderArmamento(rawData.armamento.filter(matchesUnit));
-            renderEquinos(rawData.equinos.filter(matchesUnit));
-            renderCanes(rawData.canes.filter(matchesUnit));
-            renderContratos(rawData.contratos.filter(matchesUnit));
+            // Filtros otros apartados
+            const fArma = rawData.armamento.filter(matchesUnit);
+            const fEqui = rawData.equinos.filter(matchesUnit);
+            const fCane = rawData.canes.filter(matchesUnit);
+            const fCont = rawData.contratos.filter(matchesUnit);
+
+            // Render Tablas
+            renderVehiculos(fVeh);
+            renderArmamento(fArma);
+            renderEquinos(fEqui);
+            renderCanes(fCane);
+            renderContratos(fCont);
             
-            updateKPIs(filteredVehiculos);
-            renderCharts(filteredVehiculos);
+            // Update Dashboard
+            updateKPIs(fVeh, fArma, fEqui, fCane, fCont);
+            renderCharts(fVeh, fArma, fEqui, fCane);
         }
 
-        function updateKPIs(v) {
-            const getCount = (s) => v.filter(x => String(x.Estado).toUpperCase() === s).length;
-            document.getElementById('kpi-v-op').innerText = getCount('OPERATIVO');
-            document.getElementById('kpi-v-maint').innerText = getCount('MANTENIMIENTO');
-            document.getElementById('kpi-v-crash').innerText = getCount('SINIESTRADO');
-            document.getElementById('kpi-v-parts').innerText = getCount('LOGISTICA');
-            document.getElementById('kpi-v-budget').innerText = getCount('PRESUPUESTO');
-            document.getElementById('kpi-v-held').innerText = getCount('RETENIDO');
+        function updateKPIs(v, a, e, c, k) {
+            const getCount = (arr, s) => arr.filter(x => String(x.Estado).toUpperCase() === s).length;
+            
+            document.getElementById('kpi-v-op').innerText = getCount(v, 'OPERATIVO');
+            document.getElementById('kpi-v-maint').innerText = getCount(v, 'MANTENIMIENTO');
+            document.getElementById('kpi-v-crash').innerText = getCount(v, 'SINIESTRADO');
+            
+            // Suma total de cantidades de armamento
+            document.getElementById('kpi-armamento').innerText = a.reduce((sum, item) => sum + (parseInt(item.Cantidad) || 0), 0);
+            
+            // Total Semovientes
+            document.getElementById('kpi-semovientes').innerText = e.length + c.length;
+            
+            // Contratos vencidos
+            const vencidos = k.filter(item => item.Fin && new Date(item.Fin) < today).length;
+            document.getElementById('kpi-contratos-venc').innerText = vencidos;
         }
 
         function getStatusClass(status) {
@@ -306,11 +320,10 @@
             if(s.includes('OPERATIVO')) return 'bg-green-100 text-green-700';
             if(s.includes('MANTENIMIENTO')) return 'bg-purple-100 text-purple-700';
             if(s.includes('SINIESTRADO')) return 'bg-red-100 text-red-700';
-            if(s.includes('LOGISTICA')) return 'bg-yellow-100 text-yellow-700';
-            if(s.includes('PRESUPUESTO')) return 'bg-orange-100 text-orange-700';
             return 'bg-gray-100 text-gray-700';
         }
 
+        // --- FUNCIONES RENDER (MISMAS QUE TU CODIGO ORIGINAL) ---
         function renderVehiculos(lista) {
             document.getElementById('tabla-vehiculos').innerHTML = lista.map(v => `
                 <tr class="hover:bg-gray-50 border-b">
@@ -326,84 +339,74 @@
         function renderArmamento(lista) {
             document.getElementById('tabla-armamento').innerHTML = lista.map(a => `
                 <tr class="hover:bg-gray-50 border-b text-xs">
-                    <td class="px-4 py-3 font-bold">${a.Categoria || 'N/A'}</td>
-                    <td class="px-4 py-3">${a.Tipo || 'N/A'}</td>
-                    <td class="px-4 py-3 text-blue-700">${a.Unidad || 'N/A'}</td>
-                    <td class="px-4 py-3 font-bold">${a.Cantidad || 0}</td>
-                    <td class="px-4 py-3">${a.Estado || 'N/A'}</td>
-                    <td class="px-4 py-3">${a.Vencimiento || 'N/A'}</td>
-                </tr>
-            `).join('');
+                    <td class="px-4 py-3 font-bold">${a.Categoria || 'N/A'}</td><td class="px-4 py-3">${a.Tipo || 'N/A'}</td>
+                    <td class="px-4 py-3 text-blue-700">${a.Unidad || 'N/A'}</td><td class="px-4 py-3 font-bold">${a.Cantidad || 0}</td>
+                    <td class="px-4 py-3">${a.Estado || 'N/A'}</td><td class="px-4 py-3">${a.Vencimiento || 'N/A'}</td>
+                </tr>`).join('');
         }
 
         function renderEquinos(lista) {
             document.getElementById('tabla-equinos').innerHTML = lista.map(e => `
                 <tr class="hover:bg-gray-50 border-b text-xs">
-                    <td class="px-4 py-3 font-bold">${e.ID || 'N/A'}</td>
-                    <td class="px-4 py-3">${e.Raza || 'N/A'}</td>
-                    <td class="px-4 py-3">${e.Unidad || 'N/A'}</td>
-                    <td class="px-4 py-3"><span class="px-2 py-0.5 rounded bg-orange-100 text-orange-700">${e.Salud || 'N/A'}</span></td>
-                </tr>
-            `).join('');
+                    <td class="px-4 py-3 font-bold">${e.ID || 'N/A'}</td><td class="px-4 py-3">${e.Raza || 'N/A'}</td>
+                    <td class="px-4 py-3">${e.Unidad || 'N/A'}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded bg-orange-100 text-orange-700">${e.Salud || 'N/A'}</span></td>
+                </tr>`).join('');
         }
 
         function renderCanes(lista) {
             document.getElementById('tabla-canes').innerHTML = lista.map(c => `
                 <tr class="hover:bg-gray-50 border-b text-xs">
-                    <td class="px-4 py-3 font-bold">${c.ID || 'N/A'}</td>
-                    <td class="px-4 py-3">${c.Especialidad || 'N/A'}</td>
-                    <td class="px-4 py-3">${c.Unidad || 'N/A'}</td>
-                    <td class="px-4 py-3"><span class="px-2 py-0.5 rounded bg-green-100 text-green-700">${c.Salud || 'N/A'}</span></td>
-                </tr>
-            `).join('');
+                    <td class="px-4 py-3 font-bold">${c.ID || 'N/A'}</td><td class="px-4 py-3">${c.Especialidad || 'N/A'}</td>
+                    <td class="px-4 py-3">${c.Unidad || 'N/A'}</td><td class="px-4 py-3"><span class="px-2 py-0.5 rounded bg-green-100 text-green-700">${c.Salud || 'N/A'}</span></td>
+                </tr>`).join('');
         }
 
         function renderContratos(lista) {
             document.getElementById('tabla-contratos').innerHTML = lista.map(k => {
                 const vencido = k.Fin && new Date(k.Fin) < today;
-                return `
-                <tr class="hover:bg-gray-50 border-b text-xs">
-                    <td class="px-4 py-4 font-bold">${k.Objeto || 'N/A'}</td>
-                    <td class="px-4 py-4">${k.Unidad || 'N/A'}</td>
-                    <td class="px-4 py-4">${k.Inicio || ''}</td>
-                    <td class="px-4 py-4 font-bold ${vencido ? 'text-red-600' : ''}">${k.Fin || ''}</td>
+                return `<tr class="hover:bg-gray-50 border-b text-xs">
+                    <td class="px-4 py-4 font-bold">${k.Objeto || 'N/A'}</td><td class="px-4 py-4">${k.Unidad || 'N/A'}</td>
+                    <td class="px-4 py-4">${k.Inicio || ''}</td><td class="px-4 py-4 font-bold ${vencido ? 'text-red-600' : ''}">${k.Fin || ''}</td>
                     <td class="px-4 py-4"><span class="px-2 py-1 rounded text-[9px] font-bold ${vencido ? 'bg-red-100' : 'bg-green-100'}">${vencido ? 'VENCIDO' : 'ACTIVO'}</span></td>
-                </tr>
-            `}).join('');
+                </tr>`}).join('');
         }
 
-        function renderCharts(v) {
+        function renderCharts(v, a, e, c) {
             const counts = (s) => v.filter(x => String(x.Estado).toUpperCase() === s).length;
             
-            // Gráfico de Pastel (Estados)
+            // 1. Gráfico Vehículos
             if(charts.pie) charts.pie.destroy();
             charts.pie = new Chart(document.getElementById('chartPieDetail'), {
                 type: 'pie',
                 data: {
-                    labels: ['Op', 'Taller', 'Siniestro', 'Log', 'Presp', 'Ret'],
-                    datasets: [{ data: [counts('OPERATIVO'), counts('MANTENIMIENTO'), counts('SINIESTRADO'), counts('LOGISTICA'), counts('PRESUPUESTO'), counts('RETENIDO')], backgroundColor: ['#10b981', '#8b5cf6', '#ef4444', '#f59e0b', '#f97316', '#0f172a'] }]
+                    labels: ['Op', 'Taller', 'Siniestro'],
+                    datasets: [{ data: [counts('OPERATIVO'), counts('MANTENIMIENTO'), counts('SINIESTRADO')], backgroundColor: ['#10b981', '#8b5cf6', '#ef4444'] }]
                 },
-                options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10 } } } }
+                options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
             });
 
-            // Gráfico de Zonas
-            const zones = {};
-            v.forEach(x => zones[x.Zona] = (zones[x.Zona] || 0) + 1);
-            if(charts.pieZones) charts.pieZones.destroy();
-            charts.pieZones = new Chart(document.getElementById('chartPieZones'), {
+            // 2. Gráfico Armamento (Doughnut)
+            const estArma = {};
+            a.forEach(x => estArma[x.Estado] = (estArma[x.Estado] || 0) + (parseInt(x.Cantidad) || 0));
+            if(charts.arma) charts.arma.destroy();
+            charts.arma = new Chart(document.getElementById('chartArmamento'), {
                 type: 'doughnut',
-                data: { labels: Object.keys(zones), datasets: [{ data: Object.values(zones), backgroundColor: ['#3b82f6', '#06b6d4', '#8b5cf6', '#ec4899', '#f97316'] }] },
-                options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10 } } } }
+                data: {
+                    labels: Object.keys(estArma),
+                    datasets: [{ data: Object.values(estArma), backgroundColor: ['#1e3a8a', '#3b82f6', '#ef4444', '#f59e0b'] }]
+                },
+                options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
             });
 
-            // Gráfico de Barras (Unidades)
-            const units = {};
-            v.forEach(x => units[x.Unidad] = (units[x.Unidad] || 0) + 1);
-            if(charts.bar) charts.bar.destroy();
-            charts.bar = new Chart(document.getElementById('chartZones'), {
-                type: 'bar',
-                data: { labels: Object.keys(units), datasets: [{ label: 'Vehículos', data: Object.values(units), backgroundColor: '#3b82f6' }] },
-                options: { maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+            // 3. Gráfico Semovientes (Pie)
+            if(charts.semov) charts.semov.destroy();
+            charts.semov = new Chart(document.getElementById('chartSemovientes'), {
+                type: 'pie',
+                data: {
+                    labels: ['Equinos', 'Canes'],
+                    datasets: [{ data: [e.length, c.length], backgroundColor: ['#b45309', '#059669'] }]
+                },
+                options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
             });
         }
 
